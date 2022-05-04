@@ -1,0 +1,1 @@
+(function(a){a(".color-trigger").on("click",function(){a(this).parent().toggleClass("visible-palate")});a(".color-palate .colors-list .palate").on("click",function(){var b=a(this).attr("data-theme-file");var c=a('link[id="theme-color-file"]');a(c).attr("href",b);a(".color-palate .colors-list .palate").removeClass("active");a(this).addClass("active")})}(jQuery));
