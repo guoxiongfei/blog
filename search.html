@@ -326,7 +326,9 @@
                                         <div class="ant-list ant-list-vertical ant-list-split ant-list-something-after-last-item">
                                             <div class="ant-spin-nested-loading">
                                                 <div class="ant-spin-container">
-                                                    <ul class="ant-list-items" id="ant-list-items-search-result"></ul>
+                                                    <ul class="ant-list-items" id="ant-list-items-search-result">
+                                                        <li style='line-height: 100px;text-align: center;'>抱歉，暂无相关问题，请换一个关键词！</li>
+                                                    </ul>
                                                 </div>
                                             </div>
                                             <div style="display: none; text-align: center; margin: 20px 0px; column-span: all;">
@@ -632,6 +634,9 @@
     if (window.location.href.indexOf("q=") > 0) {
         var searchKey = window.location.href.substring(window.location.href.indexOf("q=") + 2);
         if (searchKey.length > 0) {
+            if (searchKey.indexOf("&") > 0) {
+                searchKey = searchKey.substring(0, searchKey.indexOf("&"));
+            }
             _search(searchKey);
         }
     }
