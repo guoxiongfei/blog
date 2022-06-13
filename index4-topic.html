@@ -1,66 +1,12 @@
 <html lang="zh-CN">
 <head>
-    <style>
-        .anticon {
-            display: inline-block;
-            color: inherit;
-            font-style: normal;
-            line-height: 0;
-            text-align: center;
-            text-transform: none;
-            vertical-align: -0.125em;
-            text-rendering: optimizeLegibility;
-            -webkit-font-smoothing: antialiased;
-            -moz-osx-font-smoothing: grayscale;
-        }
-
-        .anticon > * {
-            line-height: 1;
-        }
-
-        .anticon svg {
-            display: inline-block;
-        }
-
-        .anticon::before {
-            display: none;
-        }
-
-        .anticon .anticon-icon {
-            display: block;
-        }
-
-        .anticon[tabindex] {
-            cursor: pointer;
-        }
-
-        .anticon-spin::before,
-        .anticon-spin {
-            display: inline-block;
-            -webkit-animation: loadingCircle 1s infinite linear;
-            animation: loadingCircle 1s infinite linear;
-        }
-
-        @-webkit-keyframes loadingCircle {
-            100% {
-                -webkit-transform: rotate(360deg);
-                transform: rotate(360deg);
-            }
-        }
-
-        @keyframes loadingCircle {
-            100% {
-                -webkit-transform: rotate(360deg);
-                transform: rotate(360deg);
-            }
-        }
-    </style>
+    <link rel="stylesheet" href="/css4/index4-header00.css">
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="keywords" content="面试,笔试,刷题,试题,校招,社招,求职,秋招,IT,程序员,编程,代码,前端,后端,Java,Python,产品,运营">
     <meta name="description" content="专业面试刷题网站，助你成为面试达人！支持自由组卷、在线刷题、校招社招斩获大厂offer，求职必备！">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
-    <title>【JAVA基础-集合】Java中的HashMap的底层原理实现、工作原理？ - 面试鸭</title>
+    <title>我要知道-搜搜问题</title>
     <link href="/css4/monokai-sublime.min.css" rel="stylesheet">
     <script src="/js4/highlight.min.js"></script>
     <link rel="stylesheet" href="/css4/umi.153f7631.css">
@@ -70,699 +16,8 @@
     <script>
         //! umi version: 3.5.20
     </script>
-    <style type="text/css">@font-face {
-        font-family: 'bf-icons';
-        src: url(data:font/ttf;base64,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) format("truetype");
-        font-weight: normal;
-        font-style: normal;
-    }
-
-    .braft-finder [class^="braft-icon-"], .braft-finder [class*=" braft-icon-"] {
-        /* use !important to prevent issues with browser extensions that change fonts */
-        font-family: 'bf-icons' !important;
-        font-style: normal;
-        font-weight: normal;
-        font-variant: normal;
-        text-transform: none;
-        /* Better Font Rendering =========== */
-        -webkit-font-smoothing: antialiased;
-        -moz-osx-font-smoothing: grayscale;
-    }
-
-    .braft-finder .braft-icon-code:before {
-        content: "\E903";
-    }
-
-    .braft-finder .braft-icon-pause:before {
-        content: "\E034";
-    }
-
-    .braft-finder .braft-icon-play_arrow:before {
-        content: "\E037";
-    }
-
-    .braft-finder .braft-icon-bin:before {
-        content: "\E9AC";
-    }
-
-    .braft-finder .braft-icon-replay:before {
-        content: "\E042";
-    }
-
-    .braft-finder .braft-icon-close:before {
-        content: "\E913";
-    }
-
-    .braft-finder .braft-icon-music:before {
-        content: "\E90E";
-    }
-
-    .braft-finder .braft-icon-camera:before {
-        content: "\E911";
-    }
-
-    .braft-finder .braft-icon-file-text:before {
-        content: "\E926";
-    }
-
-    .braft-finder .braft-icon-film:before {
-        content: "\E91C";
-    }
-
-    .braft-finder .braft-icon-paste:before {
-        content: "\E92D";
-    }
-
-    .braft-finder .braft-icon-spinner:before {
-        content: "\E980";
-    }
-
-    .braft-finder .braft-icon-media:before {
-        content: "\E90F";
-    }
-
-    .braft-finder .braft-icon-add:before {
-        content: "\E918";
-    }
-
-    .braft-finder .braft-icon-done:before {
-        content: "\E912";
-    }
-
-    .braft-finder .braft-icon-drop-down:before {
-        content: "\E906";
-    }
-
-    .braft-finder .braft-icon-drop-up:before {
-        content: "\E909";
-    }
-
-    .braft-finder .braft-icon-help:before {
-        content: "\E902";
-    }
-
-    .braft-finder .braft-icon-info:before {
-        content: "\E901";
-    }
-
-    .braft-finder .braft-icon-menu:before {
-        content: "\E908";
-    }
-
-    .pull-left {
-        float: left;
-    }
-
-    .pull-right {
-        float: right;
-    }
-
-    .braft-finder .bf-uploader {
-        position: relative;
-        height: 370px;
-        margin: 0;
-    }
-
-    .braft-finder .bf-uploader.draging .bf-list-wrap,
-    .braft-finder .bf-uploader.draging .bf-add-external {
-        pointer-events: none;
-    }
-
-    .braft-finder .bf-uploader input::-webkit-input-placeholder {
-        color: #ccc;
-    }
-
-    .braft-finder .bf-uploader input::-moz-placeholder {
-        color: #ccc;
-    }
-
-    .braft-finder .bf-uploader input::-ms-input-placeholder {
-        color: #ccc;
-    }
-
-    .braft-finder .bf-list-wrap {
-        position: relative;
-        height: 370px;
-    }
-
-    .braft-finder .bf-list-tools {
-        z-index: 1;
-        position: absolute;
-        top: 0;
-        right: 0;
-        left: 0;
-        height: 20px;
-        padding: 0 15px;
-        background-color: #fff;
-    }
-
-    .braft-finder .bf-list-tools span {
-        height: 26px;
-        font-size: 12px;
-        line-height: 20px;
-        cursor: pointer;
-        user-select: none;
-    }
-
-    .braft-finder .bf-list-tools span[disabled] {
-        opacity: .3;
-        pointer-events: none;
-    }
-
-    .braft-finder .bf-list-tools .bf-select-all,
-    .braft-finder .bf-list-tools .bf-deselect-all {
-        float: left;
-        margin-right: 5px;
-        color: #bbb;
-    }
-
-    .braft-finder .bf-list-tools .bf-select-all:hover,
-    .braft-finder .bf-list-tools .bf-deselect-all:hover {
-        color: #3498db;
-    }
-
-    .braft-finder .bf-list-tools .bf-remove-selected {
-        float: right;
-        color: #e74c3c;
-    }
-
-    .braft-finder .bf-list-tools .bf-remove-selected:hover {
-        color: #c92e1e;
-    }
-
-    .braft-finder .bf-list {
-        position: absolute;
-        z-index: 1;
-        top: 30px;
-        right: 0;
-        left: 0;
-        bottom: 0;
-        margin: 0;
-        padding: 0 10px;
-        list-style: none;
-        overflow: auto;
-    }
-
-    .braft-finder .bf-list::-webkit-scrollbar {
-        width: 5px;
-        height: 5px;
-        background-color: #fff;
-    }
-
-    .braft-finder .bf-list::-webkit-scrollbar-track {
-        background-color: #fff;
-    }
-
-    .braft-finder .bf-list::-webkit-scrollbar-thumb {
-        background-color: rgba(0, 0, 0, 0.1);
-    }
-
-    .braft-finder .bf-item,
-    .braft-finder .bf-add-item {
-        position: relative;
-        display: block;
-        float: left;
-        width: 113px;
-        height: 113px;
-        margin: 5px;
-        overflow: hidden;
-        border-radius: 3px;
-    }
-
-    .braft-finder .bf-item.uploading {
-        pointer-events: none;
-    }
-
-    .braft-finder .bf-item.error::before {
-        display: block;
-        content: "\E901";
-    }
-
-    .braft-finder .bf-item.error::after {
-        position: absolute;
-        z-index: 1;
-        top: 0;
-        right: 0;
-        bottom: 0;
-        left: 0;
-        background-color: rgba(231, 76, 60, 0.8);
-        content: '';
-    }
-
-    .braft-finder .bf-item.error:hover::after {
-        background-color: rgba(231, 76, 60, 0.9);
-    }
-
-    .braft-finder .bf-item.error .bf-item-uploading {
-        display: none;
-    }
-
-    .braft-finder .bf-add-item {
-        background-color: #ecedef;
-        color: #999;
-    }
-
-    .braft-finder .bf-add-item:hover {
-        background-color: #e1e2e3;
-    }
-
-    .braft-finder .bf-add-item i {
-        display: block;
-        width: 113px;
-        height: 113px;
-        font-size: 48px;
-        line-height: 113px;
-        text-align: center;
-    }
-
-    .braft-finder .bf-add-item input {
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        opacity: 0;
-        cursor: pointer;
-    }
-
-    .braft-finder .bf-item::before {
-        display: none;
-        position: absolute;
-        z-index: 2;
-        top: 0;
-        left: 0;
-        width: 113px;
-        height: 113px;
-        color: #fff;
-        font-size: 48px;
-        font-family: 'bf-icons';
-        line-height: 113px;
-        text-align: center;
-    }
-
-    .braft-finder .bf-item::after {
-        position: absolute;
-        z-index: 1;
-        top: 0;
-        right: 0;
-        bottom: 0;
-        left: 0;
-        background-color: rgba(52, 152, 219, 0);
-        content: '';
-    }
-
-    .braft-finder .bf-item:hover::after {
-        background-color: rgba(52, 152, 219, 0.3);
-    }
-
-    .braft-finder .bf-item:hover .bf-item-remove {
-        display: block;
-    }
-
-    .braft-finder .bf-item.active::before {
-        display: block;
-        content: "\E912";
-    }
-
-    .braft-finder .bf-item.active::after {
-        background-color: rgba(52, 152, 219, 0.6);
-    }
-
-    .braft-finder .bf-item.active:hover::after {
-        background-color: rgba(52, 152, 219, 0.8);
-    }
-
-    .braft-finder .bf-item.active:hover .bf-item-remove {
-        display: none;
-    }
-
-    .braft-finder .bf-item-uploading {
-        box-sizing: border-box;
-        position: absolute;
-        z-index: 3;
-        top: 52px;
-        left: 10px;
-        width: 93px;
-        height: 10px;
-        overflow: hidden;
-        background-color: rgba(255, 255, 255, 0.3);
-        border-radius: 5px;
-        box-shadow: 0 0 0 100px rgba(0, 0, 0, 0.5);
-    }
-
-    .braft-finder .bf-item-uploading-bar {
-        height: 10px;
-        background-color: #3498db;
-        border-radius: 0;
-    }
-
-    .braft-finder .bf-item-remove {
-        display: none;
-        position: absolute;
-        z-index: 2;
-        top: 0;
-        right: 0;
-        width: 28px;
-        height: 28px;
-        color: #fff;
-        font-size: 18px;
-        line-height: 28px;
-        text-align: center;
-        cursor: pointer;
-    }
-
-    .braft-finder .bf-item-remove:hover {
-        color: #e74c3c;
-    }
-
-    .braft-finder .bf-item-title {
-        display: none;
-        box-sizing: border-box;
-        position: absolute;
-        z-index: 2;
-        bottom: 0;
-        left: 0;
-        width: 100%;
-        height: 40px;
-        padding: 0 5px;
-        overflow: hidden;
-        background-image: linear-gradient(rgba(0, 0, 0, 0), black);
-        color: #fff;
-        font-size: 12px;
-        line-height: 55px;
-        text-align: center;
-        text-overflow: ellipsis;
-        white-space: nowrap;
-    }
-
-    .braft-finder .bf-image {
-        width: 100%;
-        height: 100%;
-        background-color: #eee;
-        user-select: none;
-    }
-
-    .braft-finder .bf-image img {
-        display: block;
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-    }
-
-    .braft-finder .bf-video {
-        background-color: #8e44ad;
-    }
-
-    .braft-finder .bf-audio {
-        background-color: #f39c12;
-    }
-
-    .braft-finder .bf-embed {
-        background-color: #f1c40f;
-    }
-
-    .braft-finder .bf-icon {
-        display: block;
-        width: 113px;
-        height: 113px;
-        overflow: hidden;
-        color: #fff;
-        text-align: center;
-        text-decoration: none;
-    }
-
-    .braft-finder .bf-icon i, .braft-finder .bf-icon span {
-        display: block;
-    }
-
-    .braft-finder .bf-icon i {
-        margin-top: 35px;
-        font-size: 24px;
-    }
-
-    .braft-finder .bf-icon span {
-        width: 103px;
-        margin: 10px auto;
-        overflow: hidden;
-        font-size: 12px;
-        text-overflow: ellipsis;
-        white-space: nowrap;
-    }
-
-    .braft-finder .bf-drag-uploader {
-        box-sizing: border-box;
-        position: absolute;
-        z-index: 2;
-        top: 0;
-        right: 15px;
-        left: 15px;
-        height: 100%;
-        background-color: #fff;
-        border: dashed 1px #bbb;
-        text-align: center;
-        opacity: 0;
-        pointer-events: none;
-    }
-
-    .braft-finder .bf-drag-uploader:hover, .braft-finder .bf-drag-uploader.draging {
-        background-color: #f1f2f3;
-    }
-
-    .braft-finder .bf-drag-uploader.active {
-        opacity: 1;
-        pointer-events: auto;
-    }
-
-    .braft-finder .bf-uploader-buttons {
-        height: 370px;
-        margin: auto;
-        text-align: center;
-    }
-
-    .braft-finder .bf-drag-tip {
-        display: inline-block;
-        margin-top: 150px;
-        color: #ccc;
-        text-align: center;
-        font-size: 28px;
-        font-weight: normal;
-        line-height: 40px;
-    }
-
-    .braft-finder .bf-drag-tip input {
-        position: absolute;
-        top: 0;
-        right: 0;
-        bottom: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        opacity: 0;
-        color: #fff;
-        text-indent: -100px;
-        cursor: pointer;
-    }
-
-    .braft-finder .bf-manager-footer {
-        height: 36px;
-        margin: 10px 0;
-        padding: 0 15px;
-    }
-
-    .braft-finder .bf-manager-footer .button {
-        float: right;
-        height: 36px;
-        margin-left: 5px;
-        padding: 0 35px;
-        font-size: 12px;
-        font-weight: 700;
-        border: none;
-        border-radius: 3px;
-        cursor: pointer;
-    }
-
-    .braft-finder .bf-manager-footer .button-insert {
-        color: #fff;
-        background-color: #3498db;
-    }
-
-    .braft-finder .bf-manager-footer .button-insert:hover {
-        background-color: #2084c7;
-    }
-
-    .braft-finder .bf-manager-footer .button-insert[disabled] {
-        opacity: .3;
-        pointer-events: none;
-        filter: grayscale(0.4);
-    }
-
-    .braft-finder .bf-manager-footer .button-cancel {
-        color: #999;
-        background-color: #e8e8e9;
-    }
-
-    .braft-finder .bf-manager-footer .button-cancel:hover {
-        background-color: #d8d8d9;
-    }
-
-    .braft-finder .bf-toggle-external-form {
-        color: #666;
-        font-size: 12px;
-        line-height: 36px;
-    }
-
-    .braft-finder .bf-toggle-external-form span {
-        color: #bbb;
-        line-height: 16px;
-        cursor: pointer;
-        user-select: none;
-    }
-
-    .braft-finder .bf-toggle-external-form span:hover {
-        color: #3498db;
-    }
-
-    .braft-finder .bf-toggle-external-form span i {
-        position: relative;
-        top: 2px;
-        font-size: 16px;
-    }
-
-    .braft-finder .bf-add-external {
-        position: absolute;
-        z-index: 3;
-        top: 0;
-        right: 0;
-        bottom: 0;
-        left: 0;
-        background-color: #fff;
-    }
-
-    .braft-finder .bf-add-external input {
-        border: solid 1px rgba(0, 0, 0, 0.3);
-        border: solid 0.5px rgba(0, 0, 0, 0.3);
-        box-shadow: none;
-    }
-
-    .braft-finder .bf-add-external input:focus {
-        border-color: #3498db;
-        box-shadow: none;
-    }
-
-    .braft-finder .bf-external-form {
-        width: 500px;
-        max-width: 90%;
-        margin: 91px auto 0 auto;
-    }
-
-    .braft-finder .bf-external-input {
-        position: relative;
-        width: 100%;
-        height: 40px;
-        margin-bottom: 10px;
-    }
-
-    .braft-finder .bf-external-input div {
-        position: absolute;
-        top: 0;
-        right: 85px;
-        left: 0;
-        height: 40px;
-    }
-
-    .braft-finder .bf-external-input input,
-    .braft-finder .bf-external-input textarea {
-        display: block;
-        box-sizing: border-box;
-        width: 100%;
-        height: 40px;
-        padding: 0 10px;
-        border: none;
-        border-radius: 3px;
-        outline: none;
-        box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.3);
-        color: #999;
-        font-size: 18px;
-    }
-
-    .braft-finder .bf-external-input input:focus,
-    .braft-finder .bf-external-input textarea:focus {
-        box-shadow: inset 0 0 0 1px #3498db;
-    }
-
-    .braft-finder .bf-external-input textarea {
-        height: 100px;
-        font-size: 14px;
-    }
-
-    .braft-finder .bf-external-input button {
-        position: absolute;
-        top: 0;
-        right: 0;
-        width: 80px;
-        height: 40px;
-        background-color: #3498db;
-        border: none;
-        border-radius: 3px;
-        color: #fff;
-        font-size: 14px;
-        font-weight: bold;
-        cursor: pointer;
-    }
-
-    .braft-finder .bf-external-input button:disabled {
-        opacity: .3;
-        pointer-events: none;
-        filter: grayscale(0.4);
-    }
-
-    .braft-finder .bf-external-input button:hover {
-        background-color: #2084c7;
-    }
-
-    .braft-finder .bf-switch-external-type {
-        overflow: hidden;
-        text-align: center;
-    }
-
-    .braft-finder .bf-switch-external-type button {
-        width: auto;
-        height: 30px;
-        margin: 10px 5px;
-        padding: 0 10px;
-        background-color: #e8e9ea;
-        border: none;
-        border-radius: 3px;
-        color: #999;
-        font-size: 12px;
-        cursor: pointer;
-    }
-
-    .braft-finder .bf-switch-external-type button:hover {
-        background-color: #d8d9da;
-    }
-
-    .braft-finder .bf-switch-external-type button:only-child {
-        display: none;
-    }
-
-    .braft-finder .bf-switch-external-type[data-type="IMAGE"] [data-type="IMAGE"],
-    .braft-finder .bf-switch-external-type[data-type="VIDEO"] [data-type="VIDEO"],
-    .braft-finder .bf-switch-external-type[data-type="AUDIO"] [data-type="AUDIO"],
-    .braft-finder .bf-switch-external-type[data-type="EMBED"] [data-type="EMBED"],
-    .braft-finder .bf-switch-external-type[data-type="FILE"] [data-type="FILE"] {
-        background-color: #3498db;
-        color: #fff;
-    }
-
-    .braft-finder .bf-external-tip {
-        display: block;
-        margin-top: 15px;
-        color: #ccc;
-        font-size: 12px;
-        text-align: center;
-    }
-    </style>
+    <link rel="stylesheet" href="/css4/index4-header01.css">
+    <script src="/js/common.js"></script>
 </head>
 <body class="" style="">
 <div id="root">
@@ -774,9 +29,10 @@
                 <header class="ant-layout-header ant-pro-fixed-header"
                         style="padding: 0px; height: 48px; line-height: 48px; width: 100%; z-index: 100; right: 0px;">
                     <div class="ant-pro-global-header"><span class="ant-pro-global-header-logo"><a><span><a
-                            href="https://www.mianshiya.com/" title="面试鸭"><img
-                            src="/img4/logo.png" alt="面试鸭"
-                            title="面试鸭"></a></span></a></span><span class="ant-pro-global-header-collapsed-button"><span
+                            href="http://www.guoxiongfei.cn/" title="搜索面试答案"><img
+                            src="/img4/logo.png" alt="搜索面试答案"
+                            title="搜索面试答案"></a></span></a></span><span
+                            class="ant-pro-global-header-collapsed-button"><span
                             role="img" aria-label="menu-unfold" class="anticon anticon-menu-unfold"><svg
                             viewBox="64 64 896 896" focusable="false" data-icon="menu-unfold" width="1em" height="1em"
                             fill="currentColor" aria-hidden="true"><path
@@ -800,9 +56,9 @@
                                                                                                  aria-activedescendant="rc_select_1_list_0"
                                                                                                  class="ant-input ant-input-lg"
                                                                                                  value=""
-                                                                                                 id="rc_select_1"><span
+                                                                                                 id="rc_select_0"><span
                                                 class="ant-input-group-addon"><button type="button"
-                                                                                      class="ant-btn ant-btn-primary ant-btn-lg ant-input-search-button"><span
+                                                                                      class="ant-btn ant-btn-primary ant-btn-lg ant-input-search-button" onclick="fn_s(this)"><span
                                                 role="img" aria-label="search" class="anticon anticon-search"><svg
                                                 viewBox="64 64 896 896" focusable="false" data-icon="search" width="1em"
                                                 height="1em" fill="currentColor" aria-hidden="true"><path
@@ -863,10 +119,16 @@
                                                     <div style="font-size: 15px;">
                                                         <div class="editor-container rich-text-viewer">
                                                             <div class="quill ">
-                                                                <div class="ql-container ql-bubble ql-disabled">
-                                                                    <div class="ql-editor" data-gramm="false"
-                                                                         contenteditable="false"><p>【JAVA基础-集合】<strong>Java中的HashMap的底层原理实现、工作原理？</strong>
-                                                                    </p>
+                                                                <div class="ql-container ql-bubble ql-disabled"
+                                                                     style="height: auto;">
+                                                                    <div class="ql-editor" style="height: auto;"
+                                                                         data-gramm="false"
+                                                                         contenteditable="false">
+                                                                        <p id="topic_title"
+                                                                           style="text-align: center;font-weight: bolder;">
+                                                                            <!--【JAVA基础-集合】-->
+                                                                            <!--<strong>Java中的HashMap的底层原理实现、工作原理？</strong>-->
+                                                                        </p>
                                                                     </div>
                                                                     <div class="ql-clipboard" contenteditable="true"
                                                                          tabindex="-1"></div>
@@ -1025,41 +287,27 @@
                                                             </div>
                                                         </div>
                                                     </div>
-                                                    <div><p style="font-size: 15px;">解析：</p>
+                                                    <div>
                                                         <div class="editor-container rich-text-viewer">
                                                             <div class="quill ">
                                                                 <div class="ql-container ql-bubble ql-disabled">
                                                                     <div class="ql-editor" data-gramm="false"
                                                                          contenteditable="false"><p><br></p>
                                                                         <blockquote>工作原理分析</blockquote>
-                                                                        <p>
-                                                                            Java中的HashMap是以键值对(key-value)的形式存储元素的。HashMap需要一个hash函数，它使用hashCode()和equals()方法来向集合/从集合添加和检索元素。当调用put()方法的时候，HashMap会计算key的hash值，然后把键值对存储在集合中合适的索引上。如果key已经存在了，value会被更新成新值</p>
-                                                                        <p>HashMap的一些重要的特性是它的容量(capacity)，负载因子(load
-                                                                            factor)和扩容极限(threshold resizing)</p>
-                                                                        <blockquote>对比jdk1.7和jdk1.8版本的不同</blockquote>
-                                                                        <p>
-                                                                            底层数据结构不一样，1.7是数组+链表，1.8则是数组+链表+红黑树结构（当链表长度大于8，转为红黑树）。</p>
-                                                                        <p>
-                                                                            JDK1.8中resize()方法在表为空时，创建表；在表不为空时，扩容；而JDK1.7中resize()方法负责扩容，inflateTable()负责创建表。</p>
-                                                                        <p>
-                                                                            1.8中没有区分键为null的情况，而1.7版本中对于键为null的情况调用putForNullKey()方法。但是两个版本中如果键为null，那么调用hash()方法得到的都将是0，<strong>所以键为null的元素都始终位于哈希表table【0】中。</strong>
-                                                                        </p>
-                                                                        <p>
-                                                                            当1.8中的桶中元素处于链表的情况，遍历的同时最后如果没有匹配的，直接将节点添加到链表尾部；而1.7在遍历的同时没有添加数据，而是另外调用了addEntry()方法，将节点添加到链表头部。</p>
-                                                                        <p>
-                                                                            1.7中新增节点采用头插法，1.8中新增节点采用尾插法。这也是为什么1.8不容易出现环型链表的原因。</p>
-                                                                        <p>
-                                                                            1.7中是通过更改hashSeed值修改节点的hash值从而达到rehash时的链表分散，而1.8中键的hash值不会改变，rehash时根据（hash&amp;oldCap）==0将链表分散。</p>
-                                                                        <p>
-                                                                            1.8rehash时保证原链表的顺序，而1.7中rehash时有可能改变链表的顺序（头插法导致）。</p>
-                                                                        <p>在扩容的时候：1.7在插入数据之前扩容，而1.8插入数据成功之后扩容。</p></div>
+                                                                        <p></p>
+                                                                        <!--<blockquote>对比jdk1.7和jdk1.8版本的不同</blockquote>-->
+
+                                                                        <div class="topic_content" id="topic_content">
+
+                                                                        </div>
+                                                                    </div>
                                                                     <div class="ql-clipboard" contenteditable="true"
                                                                          tabindex="-1"></div>
                                                                     <div class="ql-tooltip ql-hidden"><span
                                                                             class="ql-tooltip-arrow"></span>
                                                                         <div class="ql-tooltip-editor"><input
                                                                                 type="text" data-formula="e=mc^2"
-                                                                                data-link="https://quilljs.com"
+                                                                                data-link="#"
                                                                                 data-video="Embed URL"><a
                                                                                 class="ql-close"></a></div>
                                                                         <div class="ql-toolbar"><span
@@ -1453,26 +701,28 @@
                                             </div>
                                         </div>
                                         <div class="ant-card-body" style="padding-bottom: 8px;"><p>浏览数：12213</p>
-                                            <p>发布时间：2022-01-04 23:09</p>
+                                            <p>发布时间：<span id="topic_postTime"></span></p>
                                             <p>上传者：
-                                            <div class="ant-space ant-space-horizontal ant-space-align-center"
-                                                 style="gap: 8px;">
-                                                <div class="ant-space-item" style=""><a target="_blank" class="my-link"
-                                                                                        href="/ud/5b049cc861cb024b00fa108d75c881f2"><span
-                                                        class="ant-avatar ant-avatar-circle ant-avatar-image"><img
-                                                        src="https://static.mianshiya.com/img/1641293948972-10.jpg"></span></a>
-                                                </div>
-                                                <div class="ant-space-item"><a target="_blank" class="my-link"
-                                                                               href="/ud/5b049cc861cb024b00fa108d75c881f2">
-                                                    <div class="ant-space ant-space-horizontal ant-space-align-center"
-                                                         style="gap: 8px;">
-                                                        <div class="ant-space-item" style=""><span>h</span></div>
-                                                        <div class="ant-space-item"><span class="ant-tag ant-tag-orange"
-                                                                                          style="margin-right: 0px;">V5</span>
+                                                <author id="topic_author"></author>
+                                                <!--<div class="ant-space ant-space-horizontal ant-space-align-center"
+                                                     style="gap: 8px;">
+                                                    <div class="ant-space-item" style="">
+                                                        &lt;!&ndash;<a target="_blank" class="my-link"
+                                                                                            href="/ud/5b049cc861cb024b00fa108d75c881f2"><span
+                                                            class="ant-avatar ant-avatar-circle ant-avatar-image"><img
+                                                            src="https://static.mianshiya.com/img/1641293948972-10.jpg"></span></a>&ndash;&gt;
+                                                      </div>
+                                                    <div class="ant-space-item"><a target="_blank" class="my-link"
+                                                                                   href="/ud/5b049cc861cb024b00fa108d75c881f2">
+                                                        <div class="ant-space ant-space-horizontal ant-space-align-center"
+                                                             style="gap: 8px;">
+                                                            <div class="ant-space-item" style=""><span>h</span></div>
+                                                            <div class="ant-space-item"><span class="ant-tag ant-tag-orange"
+                                                                                              style="margin-right: 0px;">V5</span>
+                                                            </div>
                                                         </div>
-                                                    </div>
-                                                </a></div>
-                                            </div>
+                                                    </a></div>
+                                                </div>-->
                                             </p>
                                             <p><span style="margin-right: 16px;">遇到人数：26</span>
                                                 <button type="button" class="ant-btn ant-btn-primary ant-btn-sm"><span>我遇到过</span>
@@ -1836,13 +1086,13 @@
                                         </div>
                                     </div>
                                     <div style="margin-bottom: 24px;"></div>
-                                    <div class="ant-card ant-card-bordered">
+                                    <div class="ant-card ant-card-bordered" style="display: none;">
                                         <div class="ant-card-body" style="padding-bottom: 16px;">
                                             <div class="ant-card-meta">
                                                 <div class="ant-card-meta-avatar">
                                                     <div class="ant-image" style="width: 72px;"><img
                                                             class="ant-image-img"
-                                                            src="https://static.mianshiya.com/yupi_qrcode.png">
+                                                            src="">
                                                         <div class="ant-image-mask">
                                                             <div class="ant-image-mask-info"><span role="img"
                                                                                                    aria-label="eye"
@@ -1871,7 +1121,7 @@
                 <footer class="ant-layout-footer" style="padding: 0px;">
                     <div class="ant-pro-global-footer">
                         <div class="ant-pro-global-footer-links"><a title="feedback" target="_blank"
-                                                                    href="https://support.qq.com/products/370820?"><span><span
+                                                                    href="#"><span><span
                                 role="img" aria-label="bug" class="anticon anticon-bug"><svg viewBox="64 64 896 896"
                                                                                              focusable="false"
                                                                                              data-icon="bug" width="1em"
@@ -1905,7 +1155,7 @@
                                 viewBox="64 64 896 896" focusable="false" data-icon="copyright" width="1em" height="1em"
                                 fill="currentColor" aria-hidden="true"><path
                                 d="M512 64C264.6 64 64 264.6 64 512s200.6 448 448 448 448-200.6 448-448S759.4 64 512 64zm0 820c-205.4 0-372-166.6-372-372s166.6-372 372-372 372 166.6 372 372-166.6 372-372 372zm5.6-532.7c53 0 89 33.8 93 83.4.3 4.2 3.8 7.4 8 7.4h56.7c2.6 0 4.7-2.1 4.7-4.7 0-86.7-68.4-147.4-162.7-147.4C407.4 290 344 364.2 344 486.8v52.3C344 660.8 407.4 734 517.3 734c94 0 162.7-58.8 162.7-141.4 0-2.6-2.1-4.7-4.7-4.7h-56.8c-4.2 0-7.6 3.2-8 7.3-4.2 46.1-40.1 77.8-93 77.8-65.3 0-102.1-47.9-102.1-133.6v-52.6c.1-87 37-135.5 102.2-135.5z"></path></svg></span>
-                            2021 面试鸭 | 沪ICP备19026706号-3
+                            2021 搜索面试答案
                         </div>
                     </div>
                 </footer>
@@ -1924,10 +1174,6 @@
         </div>
     </div>
 </div>
-
-<script src="/umi.e351d8fd.js"></script>
-
-
 <div>
     <div class="ant-message">
         <div></div>
@@ -2025,5 +1271,40 @@
         </div>
     </div>
 </div>
+<script>
+    function fn_topic(topic) {
+        document.title = topic.title + "  - 搜搜答案";
+        document.getElementById("topic_title").innerHTML = "<strong>" + topic.title + "</strong>";
+        document.getElementById("topic_content").innerHTML = topic.navText;
+        document.getElementById("topic_author").innerHTML = topic.author;
+        document.getElementById("topic_postTime").innerHTML = topic.postTime;
+
+    }
+
+    function jsonp(obj) {
+        //定义一个处理Jsonp返回数据的回调函数
+        window["callback"] = function (object) {
+            obj.success(JSON.parse(object));
+        }
+        var script = document.createElement("script");
+        //组合请求URL
+        script.src = obj.url + "&fn=callback";
+        for (key in obj.data) {
+            script.src += "&" + key + "=" + obj.data[key];
+        }
+        //将创建的新节点添加到BOM树上
+        document.getElementsByTagName("body")[0].appendChild(script);
+    }
+    var localId = window.location.href.substring(window.location.href.indexOf("id=") + 3);
+    jsonp({
+        url: blog_host + "/admin/get?domain=www.guoxiongfei.cn&id=" + localId,
+        data: {
+            name: "小明",
+        },
+        success: function (obj) {
+            console.log("obj=", obj);
+        }
+    });
+</script>
 </body>
 </html>
