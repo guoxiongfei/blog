@@ -21,10 +21,11 @@
           href="/css/mobile-common.min.css"/>
     <style type="text/css">
         .post {
-        border: 0px solid;
+            border: 0px solid;
         }
-        .postDesc{
-            border-bottom:dashed 1px;
+
+        .postDesc {
+            border-bottom: dashed 1px;
             text-align: right;
         }
     </style>
@@ -48,9 +49,12 @@
         var currentPostDateAdded = '2022-06-22 21:38';
     </script>
     <script src="/js/jquery-2.2.0.min.js"></script>
-    <script src="/js/blog-common.min.js?t=0101001"></script>
+    <script src="/js/blog-common.min.js?t=0101011111"></script>
 
     <script>
+        if (window.location.href.indexOf("https") > -1) {
+            window.location.href = "http://www.guoxiongfei.cn";
+        }
         _search("机器学习数据准备面试");
     </script>
 </head>
@@ -102,8 +106,8 @@
     <div id="header">
         <div id="blogTitle">
             <a id="lnkBlogLogo" href="https://www.cnblogs.com/GuoXiongfei/"><img id="blogLogo"
-                                                                              src="/skins/custom/images/logo.gif"
-                                                                              alt="返回主页"/></a>
+                                                                                 src="/skins/custom/images/logo.gif"
+                                                                                 alt="返回主页"/></a>
 
             <!--done-->
             <h1><a id="Header1_HeaderTitle" class="headermaintitle HeaderMainTitle"
