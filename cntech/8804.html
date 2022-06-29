@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <meta name="referrer" content="origin-when-cross-origin"/>
+    <meta name="description"
+          content=""/>
+    <meta property="og:description"
+          content=""/>
+    <meta http-equiv="Cache-Control" content="no-transform"/>
+    <meta http-equiv="Cache-Control" content="no-siteapp"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <title>Java基础面试：hashcode存在的意义是啥？ - ICoding博客</title>
+    <link rel="stylesheet" href="/css/blog-common.min.css"/>
+
+    <link type="text/css" rel="stylesheet" href="/css/cnblogs.css"/>
+    <link type="text/css" rel="stylesheet" href="/css/custom.css"/>
+
+    <link id="mobile-style" media="only screen and (max-width: 767px)" type="text/css" rel="stylesheet"
+          href="/css/mobile-common.min.css"/>
+    <style type="text/css">
+        .post {
+            border: 0px solid;
+        }
+
+        .postDesc {
+            border-bottom: dashed 1px;
+            text-align: right;
+        }
+    </style>
+    <script>
+        var currentBlogId = 520;
+        var currentBlogApp = 'GuoXiongfei';
+        var isLogined = true;
+        var isBlogOwner = false;
+        var skinName = 'Custom';
+        var visitorUserId = '4410638e-090f-e011-ac81-842b2b196315';
+        var hasCustomScript = true;
+        window.cb_enable_mathjax = true;
+        window.mathEngine = 0;
+        window.codeHighlightEngine = 1;
+        window.enableCodeLineNumber = false;
+        window.codeHighlightTheme = 'cnblogs';
+        window.isDarkCodeHighlightTheme = false;
+        window.isDisableCodeHighlighter = false;
+    </script>
+    <script>
+        var currentPostDateAdded = '2022-06-22 21:38';
+    </script>
+    <script src="/js/jquery-2.2.0.min.js"></script>
+    <script src="/js/blog-common.min.js?t=0101"></script>
+
+    <script>
+
+        function fn_topic(topic) {
+            document.title = topic.title + "  - ICoding博客";
+            $("#topics h1 a span").html(topic.title);
+            var signature = '<p>原文作者：' + topic.author + '</p>';
+            signature += '<p>原文链接：' + topic.link + '</p>';
+            signature += '<p>版权声明：本作品采用知识共享署名-非商业性使用-禁止演绎 2.5 中国大陆许可协议进行许可。</p>';
+            $("#post-signature").html(signature);
+            $("#topics h1 a").attr("href", "/topic5.html?id=" + topic.docId);
+            var bodyText = [];
+            if (topic.picUrl) {
+                bodyText.push('<img src="' + topic.picUrl + '" /><br/>');
+            }
+            bodyText.push(topic.bodyText);
+            if (topic.picUrl2) {
+                var pics = topic.picUrl2.split(";");
+                for (var i = 0; i < pics.length; i++) {
+                    bodyText.push('<br/><img src="' + pics[i] + '" />');
+                }
+            }
+            //document.getElementById("topic_content").innerHTML = bodyText.join("");
+            $("#cnblogs_post_body").html(bodyText.join(""));
+        }
+        // var localId = window.location.href.substring(window.location.href.indexOf("id=") + 3);
+        // jsonp({
+        //     url: blog_host + "/admin/get?domain=www.guoxiongfei.cn&id=" + localId,
+        //     data: {
+        //         name: "小明",
+        //     },
+        //     success: function (obj) {
+        //         console.log("obj=", obj);
+        //     }
+        // });
+    </script>
+</head>
+<body class="skin-custom has-navbar mathjax2">
+<a name="top"></a>
+<div id="bannerbar" class="bannerbar-mobile formobile">
+    <a href="https://developer.aliyun.com/trainingcamp/88b6444d8728476090ac3aa1338179f2?utm_content=g_1000340106"
+       onclick="countCreativeClicks('M2-阿里云-数据库训练营')" rel="nofollow">
+        <img src="https://img2022.cnblogs.com/blog/35695/202205/35695-20220510214350477-1439286895.png" alt=""
+             onload="countCreativeImpressions('M2-阿里云-数据库训练营')"/>
+    </a>
+</div>
+<div id="top_nav" class="navbar forpc">
+    <nav id="nav_main" class="navbar-main">
+        <ul id="nav_left" class="navbar-list navbar-left">
+            <li>
+                <a href="/">首页</a>
+            </li>
+            <li>
+                <a href="https://www.guoxiongfei.cn/" onclick="countClicks('nav', 'skin-navbar-news')">新闻</a>
+            </li>
+            <li>
+                <a href="http://www.guoxiongfei.cn/" onclick="countClicks('nav', 'skin-navbar-q')">博问</a>
+            </li>
+        </ul>
+        <ul id="nav_right" class="navbar-list navbar-right">
+            <li>
+                <form id="zzk_search" class="navbar-search" action="http://www.guoxiongfei.cn/search.html?q="
+                      method="get"
+                      role="search">
+                    <input name="w" id="zzk_search_input" placeholder="代码改变世界" type="search" tabindex="3"/>
+                    <button type="submit" id="zzk_search_button">
+                        <img src="/images/aggsite/search.svg" alt="搜索"/>
+                    </button>
+                </form>
+            </li>
+        </ul>
+    </nav>
+</div>
+
+<div id="page_begin_html">
+    <div id="loading">
+        <div class="boxLoading"></div>
+    </div>
+</div>
+
+<!--done-->
+<div id="home">
+    <div id="header">
+        <div id="blogTitle">
+            <a id="lnkBlogLogo" href="https://www.cnblogs.com/GuoXiongfei/"><img id="blogLogo"
+                                                                                 src="/skins/custom/images/logo.gif"
+                                                                                 alt="返回主页"/></a>
+
+            <!--done-->
+            <h1><a id="Header1_HeaderTitle" class="headermaintitle HeaderMainTitle"
+                   href="https://www.cnblogs.com/GuoXiongfei/">GuoXiongfei</a>
+            </h1>
+            <h2>Java基础面试：hashcode存在的意义是啥？</h2>
+
+
+        </div><!--end: blogTitle 博客的标题和副标题 -->
+        <div id="navigator">
+
+            <ul id="navList">
+                <li>
+                    <a id="blog_nav_myhome" class="menu" href="https://www.guoxiongfei.cn">
+                        首页</a>
+                </li>
+                <li>
+                    <a id="blog_nav_contact" class="menu" href="https://www.guoxiongfei.cn/post.html">
+                        联系</a></li>
+                <li>
+                    <a id="blog_nav_rss" class="menu" href="javascript:void(0)"
+                       data-rss="https://www.guoxiongfei.cn/rss/">
+                        订阅</a></li>
+            </ul>
+
+
+        </div><!--end: navigator 博客导航栏 -->
+    </div><!--end: header 头部 -->
+    <div id="main">
+        <div id="mainContent" style="padding: 0px 20px">
+            <div class="forFlow">
+                <div id="post_detail">
+                    <!--done-->
+                    <div id="topics">
+                        <div class="post">
+                            <h1 class="postTitle">
+
+                                <a id="cb_post_title_url" class="postTitle2 vertical-middle"
+                                   href="https://www.cnblogs.com/GuoXiongfei/p/16395596.html">
+                                    <span role="heading" aria-level="2">Java基础面试：hashcode存在的意义是啥？</span>
+
+                                </a>
+
+                            </h1>
+                            <div class="clear"></div>
+                            <div class="postBody">
+                                <div id="cnblogs_post_body" class="blogpost-body cnblogs-markdown">
+                                    <!--正文内容-->
+                                    <h1>问：</h1>
+                                    <p><a href="http://www.guoxiongfei.cn/search5.html?q=hashcode" target="_blank">hashcode</a>存在的意义是啥？</p>
+                                    <h1>面试官心里：</h1>
+                                    <p>考察面试者研究技术的<a
+                                            href="http://www.guoxiongfei.cn/search5.html?q=%E6%B7%B1%E5%BA%A6&amp;"
+                                            target="_blank" class="hl hl-1"
+                                            data-report-click="{&quot;spm&quot;:&quot;1001.2101.3001.7020&quot;,&quot;dest&quot;:&quot;http://www.guoxiongfei.cn/search.html?q=%E6%B7%B1%E5%BA%A6&amp;spm=1001.2101.3001.7020&quot;}"
+                                            data-tit="深度" data-pretit="深度">深度</a>，探究精神很重要，这是个好问题，后续还有连环问
+                                    </p>
+                                    <h1>答：</h1>
+                                    <p>
+                                        hashcode的存在主要是用于查找对象的快捷性，如HashSet，HashMap等存储对象的结构中，hashcode是用来在<a
+                                            href="http://www.guoxiongfei.cn/search5.html?q=hash&amp;"
+                                            target="_blank" class="hl hl-1"
+                                            data-report-click="{&quot;spm&quot;:&quot;1001.2101.3001.7020&quot;,&quot;dest&quot;:&quot;http://www.guoxiongfei.cn/search5.html?q=hash&amp;spm=1001.2101.3001.7020&quot;}"
+                                            data-tit="hash" data-pretit="hash">hash</a>存储结构中确定对象的存储地址的。
+                                    </p>
+                                    <p>Java中比较两个对象是否相等，会调用object.<a
+                                            href="http://www.guoxiongfei.cn/search5.html?q=equals&amp;spm=1001.2101.3001.7020"
+                                            target="_blank" class="hl hl-1"
+                                            data-report-click="{&quot;spm&quot;:&quot;1001.2101.3001.7020&quot;,&quot;dest&quot;:&quot;http://www.guoxiongfei.cn/search5.html?q=equals&amp;spm=1001.2101.3001.7020&quot;}"
+                                            data-tit="equals" data-pretit="equals">equals</a>方法，如果两个对象相同，那么equals相同，那么这两个对象的hashcode一定要相同。
+                                    </p>
+                                    <p>官方api就是这么写的：</p>
+                                    <p>
+                                        如果对象的equals方法被重写，那么对象的hashCode也要重写，equals显示对象相等，那么两个对象的hashcode必须一致。</p>
+                                    <p>
+                                        反过来，两个对象的hashcode相同，并不一定表示两个对象就相同，也就是不一定要求equals方法返回true，只能够说明这两个对象在hash<a
+                                            href="http://www.guoxiongfei.cn/search5.html?q=%E5%AD%98%E5%82%A8%E7%BB%93%E6%9E%84&amp;spm=1001.2101.3001.7020"
+                                            target="_blank" class="hl hl-1"
+                                            data-report-click="{&quot;spm&quot;:&quot;1001.2101.3001.7020&quot;,&quot;dest&quot;:&quot;http://www.guoxiongfei.cn/search5.html?q=%E5%AD%98%E5%82%A8%E7%BB%93%E6%9E%84&amp;spm=1001.2101.3001.7020&quot;}"
+                                            data-tit="存储结构" data-pretit="存储结构">存储结构</a>中，如Hashtable中，他们“存放在同一个桶里”。
+                                    </p>
+                                    <h1>
+                                        <a name="t3"></a><strong>hashcode相同如何处理？</strong>
+                                    </h1>
+                                    <p>这是个hash碰撞问题，常见有3中解决办法</p>
+                                    <p>1，HashMap采用的是拉链法（JDK1.8以前）：</p>
+                                    <p><img alt="" class="has"
+                                            src="https://imgconvert.csdnimg.cn/aHR0cHM6Ly9pbWFnZXMyMDE3LmNuYmxvZ3MuY29tL2Jsb2cvOTU5NjU4LzIwMTgwMS85NTk2NTgtMjAxODAxMTIxNTMzMjgxNDQtMzMyNTM4MDU2LnBuZw?x-oss-process=image/format,png">
+                                    </p>
+                                    <p>2，还有开放地址法</p>
+                                    <p>开放地执法有一个公式:Hi=(H(key)+di) MOD m&nbsp;
+                                        &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
+                                        &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
+                                        &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
+                                        &nbsp; &nbsp; &nbsp;i=1,2,…,k(k&lt;=m-1)<br>
+                                        其中，m为哈希表的表长。di
+                                        是产生冲突的时候的增量序列。如果di值可能为1,2,3,…m-1，称线性探测再散列。<br>
+                                        如果di取1，则每次冲突之后，向后移动1个位置.如果di取值可能为1,-1,2,-2,4,-4,9,-9,16,-16,…k*k,-k*k(k&lt;=m/2)，称二次探测再散列。<br>
+                                        如果di取值可能为伪随机数列。称伪随机探测再散列</p>
+                                    <p>3，再hash法</p>
+                                    <p>当发生冲突时，使用第二个、第三个。。。哈希函数计算地址，直到无冲突</p>
+                                    <h1><a name="t4"></a>java 8有什么优化吗？</h1>
+                                    <p><span style="color:#f33b45;">红黑树</span>
+                                    </p>
+                                    <p>
+                                        当链表中的节点数量大于8时，转为红黑树存储有碰撞的对象值(hashmap源码)。</p>
+                                    <p>关键点：</p>
+                                    <p>1，解决二叉树极端情况下会形成链表而带来的查找效率问题</p>
+                                    <p>2，插入，删除都会打破平衡，通过左旋，右旋和改变节点颜色来达到自平衡</p>
+                                    <p><strong>左旋：</strong></p>
+                                    <p><img alt="" class="has"
+                                            src="https://imgconvert.csdnimg.cn/aHR0cDovL3MyLjUxY3RvLmNvbS9vc3MvMjAxOTAxLzIyL2M5Zjk4NmVlZjQzNDNiZGQ2OWNmMjkyNTE2ZDIxZWIwLmpwZw?x-oss-process=image/format,png">
+                                    </p>
+                                    <p>右子节点变为父节点</p>
+                                    <p>右子节点的右子节点变为兄弟节点</p>
+                                    <p>右子节点的左子节点变为右子节点</p>
+                                    <p><strong>右旋：</strong></p>
+                                    <p><img alt="" class="has"
+                                            src="https://imgconvert.csdnimg.cn/aHR0cDovL3M0LjUxY3RvLmNvbS9vc3MvMjAxOTAxLzIyLzk4MzFiMzViYzhlNWQxNTUzYmE2MDMyOTExYjE3NjZjLmpwZw?x-oss-process=image/format,png">
+                                    </p>
+                                    <p>左子节点变为父节点</p>
+                                    <p>左子节点的左子节点变为兄弟节点</p>
+                                    <p>左子节点的右子节点变为左子节点</p>
+                                    <p>&nbsp;</p>
+                                    <p>详细了解红黑树：</p>
+                                    <p>
+                                        <a href="http://www.guoxiongfei.cn/cntech/8804.html">http://www.guoxiongfei.cn/cntech/8804.html</a>
+                                    </p>
+
+
+                                </div>
+
+                                <div class="clear"></div>
+                                <div id="blog_post_info_block" role="contentinfo">
+                                    <div id="blog_post_info"></div>
+                                    <div class="clear"></div>
+                                    <div id="post_next_prev"></div>
+                                </div>
+                            </div>
+                            <div class="postDesc" style="display: none;">posted @
+                                <span id="post-date">2022-06-22 21:38</span>&nbsp;
+                                <a href="https://www.cnblogs.com/GuoXiongfei/">GuoXiongfei</a>&nbsp;
+                                阅读(<span id="post_view_count">467</span>)&nbsp;
+                            </div>
+                        </div>
+
+
+                    </div><!--end: topics 文章、评论容器-->
+                </div>
+
+            </div><!--end: forFlow -->
+        </div><!--end: mainContent 主体内容容器-->
+        <div id="sideBar">
+            <div id="sideBarMain">
+                <div id="blog-calendar" style="display:none"></div>
+                <div id="leftcontentcontainer">
+                    <div id="blog-sidecolumn"></div>
+                </div>
+            </div><!--end: sideBarMain -->
+        </div><!--end: sideBar 侧边栏容器 -->
+        <div class="clear"></div>
+    </div><!--end: main -->
+    <div class="clear"></div>
+    <div id="footer">
+        <!--done-->
+        Copyright &copy; 2022 www.GuoXiongfei.cn
+    </div><!--end: footer -->
+</div><!--end: home 自定义的最大容器 -->
+
+
+<div id="page_end_html">
+    <script type="application/javascript" src="https://guangzan.gitee.io/awescnb/index.js"></script>
+    <script type="application/javascript" src="/js/blog-commom-footer.js"></script>
+</div>
+
+</body>
+
+<script type="application/javascript">
+    $(function () {
+        if (!rf) {
+            initMenu();
+        }
+    });
+</script>
+</html>
